@@ -1,6 +1,6 @@
 # Drop-Based Learning Rate Decay
 import pandas
-import pandas
+from pandas import read_csv
 import numpy
 import math
 from keras.models import Sequential
@@ -21,7 +21,7 @@ def step_decay(epoch):
 seed = 7
 numpy.random.seed(seed)
 # load dataset
-dataframe = pandas.read_csv("ionosphere.csv", header=None)
+dataframe = read_csv("ionosphere.csv", header=None)
 dataset = dataframe.values
 # split into input (X) and output (Y) variables
 X = dataset[:,0:34].astype(float)

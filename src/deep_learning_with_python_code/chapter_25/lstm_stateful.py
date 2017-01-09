@@ -1,12 +1,13 @@
 # LSTM for international airline passengers problem with memory
 import numpy
 import matplotlib.pyplot as plt
-import pandas
+from pandas import read_csv
 import math
 from keras.models import Sequential
 from keras.layers import Dense
 from keras.layers import LSTM
 from sklearn.preprocessing import MinMaxScaler
+from sklearn.metrics import mean_squared_error
 # convert an array of values into a dataset matrix
 def create_dataset(dataset, look_back=1):
 	dataX, dataY = [], []
@@ -18,7 +19,7 @@ def create_dataset(dataset, look_back=1):
 # fix random seed for reproducibility
 numpy.random.seed(7)
 # load the dataset
-dataframe = pandas.read_csv('international-airline-passengers.csv', usecols=[1], engine='python', skipfooter=3)
+dataframe = read_csv('international-airline-passengers.csv', usecols=[1], engine='python', skipfooter=3)
 dataset = dataframe.values
 dataset = dataset.astype('float32')
 # normalize the dataset
@@ -44,20 +45,20 @@ model.compile(loss='mean_squared_error', optimizer='adam')
 for i in range(100):
 	model.fit(trainX, trainY, nb_epoch=1, batch_size=batch_size, verbose=2, shuffle=False)
 	model.reset_states()
-# Estimate model performance
-trainScore = model.evaluate(trainX, trainY, batch_size=batch_size, verbose=0)
-model.reset_states()
-trainScore = math.sqrt(trainScore)
-trainScore = scaler.inverse_transform(numpy.array([[trainScore]]))
-print('Train Score: %.2f RMSE' % (trainScore))
-testScore = model.evaluate(testX, testY, batch_size=batch_size, verbose=0)
-model.reset_states()
-testScore = math.sqrt(testScore)
-testScore = scaler.inverse_transform(numpy.array([[testScore]]))
-print('Test Score: %.2f RMSE' % (testScore))
-# generate predictions for training
+# make predictions
 trainPredict = model.predict(trainX, batch_size=batch_size)
+model.reset_states()
 testPredict = model.predict(testX, batch_size=batch_size)
+# invert predictions
+trainPredict = scaler.inverse_transform(trainPredict)
+trainY = scaler.inverse_transform([trainY])
+testPredict = scaler.inverse_transform(testPredict)
+testY = scaler.inverse_transform([testY])
+# calculate root mean squared error
+trainScore = math.sqrt(mean_squared_error(trainY[0], trainPredict[:,0]))
+print('Train Score: %.2f RMSE' % (trainScore))
+testScore = math.sqrt(mean_squared_error(testY[0], testPredict[:,0]))
+print('Test Score: %.2f RMSE' % (testScore))
 # shift train predictions for plotting
 trainPredictPlot = numpy.empty_like(dataset)
 trainPredictPlot[:, :] = numpy.nan
@@ -67,7 +68,7 @@ testPredictPlot = numpy.empty_like(dataset)
 testPredictPlot[:, :] = numpy.nan
 testPredictPlot[len(trainPredict)+(look_back*2)+1:len(dataset)-1, :] = testPredict
 # plot baseline and predictions
-plt.plot(dataset)
+plt.plot(scaler.inverse_transform(dataset))
 plt.plot(trainPredictPlot)
 plt.plot(testPredictPlot)
 plt.show()

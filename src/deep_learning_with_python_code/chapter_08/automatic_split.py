@@ -2,8 +2,6 @@
 from keras.models import Sequential
 from keras.layers import Dense
 import numpy
-import time
-
 # fix random seed for reproducibility
 seed = 7
 numpy.random.seed(seed)
@@ -18,8 +16,6 @@ model.add(Dense(12, input_dim=8, init='uniform', activation='relu'))
 model.add(Dense(8, init='uniform', activation='relu'))
 model.add(Dense(1, init='uniform', activation='sigmoid'))
 # Compile model
-t_start = time.time()
 model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
 # Fit the model
 model.fit(X, Y, validation_split=0.33, nb_epoch=150, batch_size=10)
-print('Time Elapsed: %3.3f' %(time.time() - t_start))

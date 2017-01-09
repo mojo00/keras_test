@@ -3,20 +3,22 @@ import numpy
 from keras.datasets import imdb
 from matplotlib import pyplot
 # load the dataset
-(X_train, y_train), (X_test, y_test) = imdb.load_data(test_split=0)
+(X_train, y_train), (X_test, y_test) = imdb.load_data()
+X = numpy.concatenate((X_train, X_test), axis=0)
+y = numpy.concatenate((y_train, y_test), axis=0)
 # summarize size
 print("Training data: ")
-print(X_train.shape)
-print(y_train.shape)
+print(X.shape)
+print(y.shape)
 # Summarize number of classes
 print("Classes: ")
-print(numpy.unique(y_train))
+print(numpy.unique(y))
 # Summarize number of words
 print("Number of words: ")
-print(len(numpy.unique(numpy.hstack(X_train))))
+print(len(numpy.unique(numpy.hstack(X))))
 # Summarize review length
 print("Review length: ")
-result = map(len, X_train)
+result = map(len, X)
 print("Mean %.2f words (%f)" % (numpy.mean(result), numpy.std(result)))
 # plot review length as a boxplot and histogram
 pyplot.subplot(121)

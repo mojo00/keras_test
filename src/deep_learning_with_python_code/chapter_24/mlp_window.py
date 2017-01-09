@@ -1,7 +1,7 @@
 # Multilayer Perceptron to Predict International Airline Passengers (t+1, given t, t-1, t-2)
 import numpy
 import matplotlib.pyplot as plt
-import pandas
+from pandas import read_csv
 import math
 from keras.models import Sequential
 from keras.layers import Dense
@@ -16,7 +16,7 @@ def create_dataset(dataset, look_back=1):
 # fix random seed for reproducibility
 numpy.random.seed(7)
 # load the dataset
-dataframe = pandas.read_csv('international-airline-passengers.csv', usecols=[1], engine='python', skipfooter=3)
+dataframe = read_csv('international-airline-passengers.csv', usecols=[1], engine='python', skipfooter=3)
 dataset = dataframe.values
 dataset = dataset.astype('float32')
 # split into train and test sets
@@ -25,7 +25,7 @@ test_size = len(dataset) - train_size
 train, test = dataset[0:train_size,:], dataset[train_size:len(dataset),:]
 print(len(train), len(test))
 # reshape dataset
-look_back = 10
+look_back = 3
 trainX, trainY = create_dataset(train, look_back)
 testX, testY = create_dataset(test, look_back)
 # create and fit Multilayer Perceptron model

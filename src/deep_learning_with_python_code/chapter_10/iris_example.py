@@ -1,19 +1,19 @@
 # Multiclass Classification with the Iris Flowers Dataset
 import numpy
-import pandas
+from pandas import read_csv
 from keras.models import Sequential
 from keras.layers import Dense
 from keras.wrappers.scikit_learn import KerasClassifier
 from keras.utils import np_utils
-from sklearn.cross_validation import cross_val_score
-from sklearn.cross_validation import KFold
+from sklearn.model_selection import cross_val_score
+from sklearn.model_selection import KFold
 from sklearn.preprocessing import LabelEncoder
 from sklearn.pipeline import Pipeline
 # fix random seed for reproducibility
 seed = 7
 numpy.random.seed(seed)
 # load dataset
-dataframe = pandas.read_csv("iris.csv", header=None)
+dataframe = read_csv("iris.csv", header=None)
 dataset = dataframe.values
 X = dataset[:,0:4].astype(float)
 Y = dataset[:,4]
@@ -33,6 +33,6 @@ def baseline_model():
 	model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
 	return model
 estimator = KerasClassifier(build_fn=baseline_model, nb_epoch=200, batch_size=5, verbose=0)
-kfold = KFold(n=len(X), n_folds=10, shuffle=True, random_state=seed)
+kfold = KFold(n_splits=10, shuffle=True, random_state=seed)
 results = cross_val_score(estimator, X, dummy_y, cv=kfold)
 print("Accuracy: %.2f%% (%.2f%%)" % (results.mean()*100, results.std()*100))

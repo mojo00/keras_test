@@ -3,6 +3,8 @@ from keras.datasets import mnist
 from keras.preprocessing.image import ImageDataGenerator
 from matplotlib import pyplot
 import os
+from keras import backend as K
+K.set_image_dim_ordering('th')
 # load data
 (X_train, y_train), (X_test, y_test) = mnist.load_data()
 # reshape to be [samples][pixels][width][height]

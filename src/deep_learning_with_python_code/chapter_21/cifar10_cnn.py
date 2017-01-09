@@ -10,6 +10,8 @@ from keras.optimizers import SGD
 from keras.layers.convolutional import Convolution2D
 from keras.layers.convolutional import MaxPooling2D
 from keras.utils import np_utils
+from keras import backend as K
+K.set_image_dim_ordering('th')
 # fix random seed for reproducibility
 seed = 7
 numpy.random.seed(seed)

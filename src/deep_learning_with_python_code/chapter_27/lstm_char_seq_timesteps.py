@@ -4,10 +4,8 @@ from keras.models import Sequential
 from keras.layers import Dense
 from keras.layers import LSTM
 from keras.utils import np_utils
-from theano.tensor.shared_randomstreams import RandomStreams
 # fix random seed for reproducibility
 numpy.random.seed(7)
-srng = RandomStreams(7)
 # define the raw dataset
 alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 # create mapping of characters to integers (0-25) and the reverse
@@ -22,7 +20,7 @@ for i in range(0, len(alphabet) - seq_length, 1):
 	seq_out = alphabet[i + seq_length]
 	dataX.append([char_to_int[char] for char in seq_in])
 	dataY.append(char_to_int[seq_out])
-	print seq_in, '->', seq_out
+	print(seq_in, '->', seq_out)
 # reshape X to be [samples, time steps, features]
 X = numpy.reshape(dataX, (len(dataX), seq_length, 1))
 # normalize
@@ -46,4 +44,4 @@ for pattern in dataX:
 	index = numpy.argmax(prediction)
 	result = int_to_char[index]
 	seq_in = [int_to_char[value] for value in pattern]
-	print seq_in, "->", result
+	print(seq_in, "->", result)

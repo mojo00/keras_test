@@ -1,15 +1,15 @@
 # Regression Example With Boston Dataset: Standardized and Larger
 import numpy
-import pandas
+from pandas import read_csv
 from keras.models import Sequential
 from keras.layers import Dense
 from keras.wrappers.scikit_learn import KerasRegressor
-from sklearn.cross_validation import cross_val_score
-from sklearn.cross_validation import KFold
+from sklearn.model_selection import cross_val_score
+from sklearn.model_selection import KFold
 from sklearn.preprocessing import StandardScaler
 from sklearn.pipeline import Pipeline
 # load dataset
-dataframe = pandas.read_csv("housing.csv", delim_whitespace=True, header=None)
+dataframe = read_csv("housing.csv", delim_whitespace=True, header=None)
 dataset = dataframe.values
 # split into input (X) and output (Y) variables
 X = dataset[:,0:13]
@@ -32,6 +32,6 @@ estimators = []
 estimators.append(('standardize', StandardScaler()))
 estimators.append(('mlp', KerasRegressor(build_fn=larger_model, nb_epoch=50, batch_size=5, verbose=0)))
 pipeline = Pipeline(estimators)
-kfold = KFold(n=len(X), n_folds=10, random_state=seed)
+kfold = KFold(n_splits=10, random_state=seed)
 results = cross_val_score(pipeline, X, Y, cv=kfold)
 print("Larger: %.2f (%.2f) MSE" % (results.mean(), results.std()))

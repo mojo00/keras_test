@@ -1,5 +1,5 @@
 # Time Based Learning Rate Decay
-import pandas
+from pandas import read_csv
 import numpy
 from keras.models import Sequential
 from keras.layers import Dense
@@ -9,7 +9,7 @@ from sklearn.preprocessing import LabelEncoder
 seed = 7
 numpy.random.seed(seed)
 # load dataset
-dataframe = pandas.read_csv("ionosphere.csv", header=None)
+dataframe = read_csv("ionosphere.csv", header=None)
 dataset = dataframe.values
 # split into input (X) and output (Y) variables
 X = dataset[:,0:34].astype(float)

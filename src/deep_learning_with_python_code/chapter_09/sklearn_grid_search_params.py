@@ -2,7 +2,7 @@
 from keras.models import Sequential
 from keras.layers import Dense
 from keras.wrappers.scikit_learn import KerasClassifier
-from sklearn.grid_search import GridSearchCV
+from sklearn.model_selection import GridSearchCV
 import numpy
 
 # Function to create model, required for KerasClassifier
@@ -29,12 +29,15 @@ model = KerasClassifier(build_fn=create_model, verbose=0)
 # grid search epochs, batch size and optimizer
 optimizers = ['rmsprop', 'adam']
 init = ['glorot_uniform', 'normal', 'uniform']
-epochs = numpy.array([50, 100, 150])
-batches = numpy.array([5, 10, 20])
+epochs = [50, 100, 150]
+batches = [5, 10, 20]
 param_grid = dict(optimizer=optimizers, nb_epoch=epochs, batch_size=batches, init=init)
 grid = GridSearchCV(estimator=model, param_grid=param_grid)
 grid_result = grid.fit(X, Y)
 # summarize results
 print("Best: %f using %s" % (grid_result.best_score_, grid_result.best_params_))
-for params, mean_score, scores in grid_result.grid_scores_:
-    print("%f (%f) with: %r" % (scores.mean(), scores.std(), params))
+means = grid_result.cv_results_['mean_test_score']
+stds = grid_result.cv_results_['std_test_score']
+params = grid_result.cv_results_['params']
+for mean, stdev, param in zip(means, stds, params):
+	print("%f (%f) with: %r" % (mean, stdev, param))

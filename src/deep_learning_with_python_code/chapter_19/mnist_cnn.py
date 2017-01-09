@@ -8,6 +8,8 @@ from keras.layers import Flatten
 from keras.layers.convolutional import Convolution2D
 from keras.layers.convolutional import MaxPooling2D
 from keras.utils import np_utils
+from keras import backend as K
+K.set_image_dim_ordering('th')
 # fix random seed for reproducibility
 seed = 7
 numpy.random.seed(seed)
@@ -27,7 +29,7 @@ num_classes = y_test.shape[1]
 def baseline_model():
 	# create model
 	model = Sequential()
-	model.add(Convolution2D(32, 5, 5, border_mode='valid', input_shape=(1, 28, 28), activation='relu'))
+	model.add(Convolution2D(32, 5, 5, input_shape=(1, 28, 28), activation='relu'))
 	model.add(MaxPooling2D(pool_size=(2, 2)))
 	model.add(Dropout(0.2))
 	model.add(Flatten())
